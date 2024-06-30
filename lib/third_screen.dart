@@ -15,6 +15,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
   bool _showTextInput = true;
   bool _showMenuButton = false;
   bool _showNotesButton = true;
+  bool _showAuthorName = false; // Nueva variable para controlar la visibilidad del nombre del autor
   final TextEditingController _textController = TextEditingController(); // Controlador del TextField
 
   @override
@@ -119,6 +120,7 @@ class _ThirdScreenState extends State<ThirdScreen> {
                         _showTextInput = false;
                         _showMenuButton = true;
                         _showNotesButton = true;
+                        _showAuthorName = true; // Mostrar el nombre del autor
                       });
                     } else {
                       // Mostrar un mensaje de error si el texto está vacío
@@ -142,48 +144,56 @@ class _ThirdScreenState extends State<ThirdScreen> {
               const SizedBox(height: 5),
               _showTextInput
                   ? const SizedBox()
-                  : Container(
-                width: 320,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFDFE3FE),
-                  borderRadius: BorderRadius.circular(0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      spreadRadius: 0,
-                      blurRadius: 16,
-                      offset: const Offset(0, 0),
+                  : Stack(
+                children: [
+                  Container(
+                    width: 320,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFDFE3FE),
+                      borderRadius: BorderRadius.circular(0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 0,
+                          blurRadius: 16,
+                          offset: const Offset(0, 0),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: const Center(
-                  child: Text(
-                    'Cuando la comunicación apoya la compasión, el dar y recibir, la felicidad reemplaza la violencia.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF000000),
-                      fontSize: 24,
-                      fontFamily: 'Alegreya',
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                child: Text(
-                  'David Cooperfield', // Aquí debes poner el nombre del autor o la cita correspondiente
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontStyle: FontStyle.italic,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
+                    child: const Center(
+                      child: Text(
+                        'Cuando la comunicación apoya la compasión, el dar y recibir, la felicidad reemplaza la violencia.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFF000000),
 
+                          fontSize: 24,
+                          fontFamily: 'Alegreya',
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: Visibility(
+                      visible: _showAuthorName,
+                      child: const Text(
+                        '-Marshall Rosenberg', // Nombre del autor
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontFamily: 'Alegreya',
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Visibility(
                 visible: _showMenuButton,
                 child: ElevatedButton.icon(

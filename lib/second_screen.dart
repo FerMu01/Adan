@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'main.dart'; // Asegúrate de importar main.dart
 
 class SecondScreen extends StatefulWidget {
   const SecondScreen({Key? key}) : super(key: key);
@@ -24,7 +26,28 @@ class _SecondScreenState extends State<SecondScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Galería'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyHomePage()),
+              );
+            },
+            icon: Image.asset(
+              'assets/images/ADANB.png', // Ruta de la imagen en los assets
+              width: 82, // Ancho de la imagen
+              height: 82, // Alto de la imagen
+            ),
+          ),
+        ],
+        title: const Text(
+          'Galería',
+          style: TextStyle(
+            fontFamily: 'Oswald',
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -43,6 +66,10 @@ class _SecondScreenState extends State<SecondScreen>
           ],
           indicatorColor: const Color(0xFF1844FC),
           labelColor: const Color(0xFF1844FC),
+          labelStyle: const TextStyle(
+            fontFamily: 'Oswald',
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       body: GestureDetector(
@@ -166,7 +193,7 @@ class _SecondScreenState extends State<SecondScreen>
   }
 }
 
-class VideoContainerItem extends StatelessWidget {
+class VideoContainerItem extends StatefulWidget {
   final String videoPath;
   final String thumbnailPath;
   final String text;
@@ -185,13 +212,41 @@ class VideoContainerItem extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _VideoContainerItemState createState() => _VideoContainerItemState();
+}
+
+class _VideoContainerItemState extends State<VideoContainerItem> {
+  late int viewCount;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadViewCount();
+  }
+
+  Future<void> _loadViewCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      viewCount = prefs.getInt(widget.videoPath) ?? 0;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        final newViewCount = viewCount + 1;
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setInt(widget.videoPath, newViewCount);
+
+        setState(() {
+          viewCount = newViewCount;
+        });
+
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => VideoPlayerScreen(videoPath: videoPath),
+            builder: (context) => VideoPlayerScreen(videoPath: widget.videoPath),
           ),
         );
       },
@@ -207,9 +262,9 @@ class VideoContainerItem extends StatelessWidget {
                 AspectRatio(
                   aspectRatio: 16 / 9,
                   child: Image(
-                    image: AssetImage(thumbnailPath),
-                    height: imageHeight,
-                    width: width,
+                    image: AssetImage(widget.thumbnailPath),
+                    height: widget.imageHeight,
+                    width: widget.width,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -217,9 +272,25 @@ class VideoContainerItem extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                text,
-                style: const TextStyle(fontSize: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.text,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Oswald',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.visibility),
+                      SizedBox(width: 4),
+                      Text('$viewCount'),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
@@ -255,7 +326,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       allowPlaybackSpeedChanging: false,
       allowedScreenSleep: false,
       showControls: true,
-      fullScreenByDefault: true, // Reproducir en pantalla completa por defecto
+      fullScreenByDefault: true,
       placeholder: Container(
         color: Colors.black,
       ),
@@ -265,9 +336,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.videoPath),
-      ),
       body: Center(
         child: Chewie(
           controller: _chewieController,
