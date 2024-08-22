@@ -44,7 +44,7 @@ class ConstraintLayout extends StatelessWidget {
                 child: InvisibleButton(),
               ),
               Positioned(
-                top: layout.maxHeight * 0.16,
+                top: layout.maxHeight * 0.28,
                 left: layout.maxWidth * 0.1,
                 right: layout.maxWidth * 0.1,
                 child: Image.asset(
@@ -55,11 +55,11 @@ class ConstraintLayout extends StatelessWidget {
               ),
               Positioned(
                 bottom: 0,
-                left: layout.maxWidth * 0.0005,
+                left: layout.maxWidth * 0.0004,
                 right: layout.maxWidth * 0.0005,
                 child: Container(
                   width: 480,
-                  height: 280,
+                  height: 307,
                   color: Colors.white,
                 ),
               ),

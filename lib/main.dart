@@ -63,14 +63,14 @@ class MyHomePage extends StatelessWidget {
             child: Image.asset(
               'assets/images/ADANB.png',
               fit: BoxFit.contain,
-              width: 120,
-              height: 120,
+              width: 110,
+              height: 110,
             ),
           ),
           Image.asset(
             'assets/images/AdanMainMenu.png',
-            width: 230,
-            height: 230,
+            width: 295,
+            height: 295,
           ),
           Center(
             child: Column(

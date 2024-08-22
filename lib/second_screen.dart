@@ -216,7 +216,7 @@ class VideoContainerItem extends StatefulWidget {
 }
 
 class _VideoContainerItemState extends State<VideoContainerItem> {
-  late int viewCount;
+  late int viewCount = 0; // Inicialización temprana con valor predeterminado
 
   @override
   void initState() {
@@ -299,6 +299,7 @@ class _VideoContainerItemState extends State<VideoContainerItem> {
     );
   }
 }
+
 
 class VideoPlayerScreen extends StatefulWidget {
   final String videoPath;

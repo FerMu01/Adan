@@ -31,9 +31,9 @@ class FourthScreen extends StatelessWidget {
                 );
               },
               icon: Image.asset(
-                'assets/images/ADANB.png', // Ruta de la imagen en los assets
-                width: 82, // Ancho de la imagen
-                height: 82, // Alto de la imagen
+                'assets/images/ADANB.png',
+                width: 82,
+                height: 82,
               ),
             ),
           ],
@@ -115,7 +115,7 @@ class VideoContainerItem extends StatelessWidget {
                 text,
                 style: const TextStyle(
                   fontSize: 16,
-                  fontFamily: 'Oswald', // Fuente Oswald
+                  fontFamily: 'Oswald',
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -157,6 +157,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         color: Colors.black,
       ),
     );
+
+    _controller.addListener(() {
+      if (_controller.value.position == _controller.value.duration) {
+        // El video terminó, regresa a la pantalla anterior
+        Navigator.pop(context);
+      }
+    });
   }
 
   @override
@@ -164,7 +171,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
-        return false;
+        return true;
       },
       child: Scaffold(
         body: Center(
